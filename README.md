@@ -53,7 +53,7 @@ MagicPlan_2D_floor_plan/
 │           ├── dxf_exporter.py
 
 ```
-
+### Note: make sure to download the models mention below !!
 ### Main components
 
 - api_endpoint/main.py — FastAPI application and API routes.
@@ -171,8 +171,8 @@ pip install -r requirements.txt
 
 Make sure these files exist before starting the app:
 
-- `model.pth`:
-- yolov8.pt:
+- `model.pth`: https://drive.google.com/file/d/1H5K8Ha4JEbEcuon-rV1jWNSAYz3yudvQ/view?usp=drive_link
+- `yolov8.pt`: https://drive.google.com/file/d/1Mw1WkUNHtciKvWyNUilbWHQh-6MWEeYo/view?usp=drive_link
 
 ## Configuration
 
