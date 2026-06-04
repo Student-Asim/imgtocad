@@ -15,26 +15,88 @@ A FastAPI-based project that converts panorama or room images into a structured 
 ```text
 MagicPlan_2D_floor_plan/
 ├── api_endpoint/
-│   ├── config.py
+│   ├── __init__.py
 │   ├── main.py
-│   ├── pipeline.py
-│   ├── model.pth
-│   └── outputs/
-├── HorizonNet/
-│   ├── model.py
-│   └── ...
-├── requirements.txt
-└── README.md
+│   ├── config.py
+│   ├── outputs/
+│   └── runnable_floorplan/
+│       ├── __init__.py
+│       ├── types.py
+│       ├── models/
+│       │   ├── model.pth
+│       │   ├── yolov8x.pt
+│       ├── core/
+│       │   ├── __init__.py
+│       │   ├── io_utils.py
+│       │   ├── pipeline.py
+│       │   └── registry.py
+│       ├── detectors/
+│       │   ├── __init__.py
+│       │   ├── openings.py
+│       │   └── furniture.py
+│       │   ├── horizonnet.py
+│       ├── geometry/
+│       │   ├── __init__.py
+│       │   ├── layout.py
+│       │   ├── raycast.py
+│       │   ├── agnles.py
+│       │   └── transforms.py
+│       ├── placement/
+│       │   ├── __init__.py
+│       │   └── furniture.py
+│       ├── renderers/
+│       │   ├── __init__.py
+│       │   ├── debug_renderer.py
+│       │   └── floorplan_renderer.py
+│       └── exporters/
+│           ├── __init__.py
 ```
 
 ### Main components
 
-- `main.py` — FastAPI application and API routes.
-- `config.py` — central configuration using environment variables and defaults.
-- `pipeline.py` — end-to-end inference pipeline for layout, openings, and furniture.
-- `model.pth` — HorizonNet weights file.
-- `HorizonNet/model.py` — Python source that defines the `HorizonNet` architecture.
-- `outputs/` — generated PNG, DXF, and debug files. [web:184][web:190]
+- api_endpoint/main.py — FastAPI application and API routes.
+
+-  api_endpoint/config.py — central configuration using environment variables and defaults.
+
+- api_endpoint/runnable_floorplan/__init__.py — package entry point that exposes load_models and run_pipeline.
+
+- api_endpoint/runnable_floorplan/types.py — shared data types for detections, openings, furniture, and pipeline results.
+
+- api_endpoint/runnable_floorplan/models/model.pth — HorizonNet weights file.
+
+- api_endpoint/runnable_floorplan/models/yolov8x.pt — YOLO weights file for furniture detection.
+
+- api_endpoint/runnable_floorplan/core/io_utils.py — image and file I/O utilities used by the pipeline.
+
+- api_endpoint/runnable_floorplan/core/pipeline.py — end-to-end inference pipeline for layout, openings, and furniture.
+
+- api_endpoint/runnable_floorplan/core/registry.py — model loading and model registry for reusable inference models.
+
+- api_endpoint/runnable_floorplan/detectors/openings.py — door and window detection plus wall-mapping logic.
+
+- api_endpoint/runnable_floorplan/detectors/furniture.py — furniture detection and filtered detection parsing.
+
+- api_endpoint/runnable_floorplan/detectors/horizonnet.py — HorizonNet inference wrapper for panorama-based room layout prediction.
+
+- api_endpoint/runnable_floorplan/geometry/layout.py — room polygon construction and corner-processing utilities.
+
+- api_endpoint/runnable_floorplan/geometry/raycast.py — ray-to-wall intersection helpers.
+
+- api_endpoint/runnable_floorplan/geometry/agnles.py — angle conversion and circular angle comparison utilities.
+
+- api_endpoint/runnable_floorplan/geometry/transforms.py — geometric transform helpers for rotated shapes and placements.
+
+- api_endpoint/runnable_floorplan/placement/furniture.py — furniture sizing and valid in-room placement logic.
+
+- api_endpoint/runnable_floorplan/renderers/debug_renderer.py — debug image rendering for layout, openings, and furniture overlays.
+
+- api_endpoint/runnable_floorplan/renderers/floorplan_renderer.py — final 2D floorplan rendering for PNG output.
+
+- api_endpoint/runnable_floorplan/exporters/ — export layer for formats such as DXF.
+
+- HorizonNet/model.py — Python source that defines the HorizonNet architecture.
+
+- api_endpoint/outputs/ — generated PNG, DXF, and debug files.
 
 ## How it works
 
@@ -83,8 +145,8 @@ Ultralytics supports Python integration through the `ultralytics` package, while
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/MagicPlan_2D_floor_plan.git
-cd MagicPlan_2D_floor_plan
+git clone https://github.com/Student-Asim/image_to_2d_plot.git
+cd api_endpoint
 ```
 
 ### 2. Create and activate a virtual environment
@@ -107,9 +169,8 @@ pip install -r requirements.txt
 
 Make sure these files exist before starting the app:
 
-- `api_endpoint/model.pth` or the configured HorizonNet weights path
-- `HorizonNet/model.py`
-- FastAPI source files inside `api_endpoint/`
+- `model.pth`:
+- yolov8.pt:
 
 ## Configuration
 
