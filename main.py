@@ -8,8 +8,9 @@ from fastapi import BackgroundTasks, FastAPI, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from PIL import Image, UnidentifiedImageError
 
-from . import config as C
-from . import pipeline as P
+from api_endpoint import config as C
+from .runnable_floorplan.core.pipeline import load_models, run_pipeline
+
 
 logging.basicConfig(
     level=logging.INFO,
@@ -23,7 +24,7 @@ _jobs: dict[str, dict] = {}
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     log.info("Loading models...")
-    P.load_models()
+    load_models()
     log.info("Models ready.")
     yield
     log.info("Shutdown complete.")
@@ -42,18 +43,13 @@ app = FastAPI(
 ALLOWED_CONTENT_TYPES = {"image/jpeg", "image/png", "image/jpg"}
 
 
-@app.get("/health", tags=["System"])
-def health():
-    return {"status": "ok"}
-
-
 @app.post("/generate", tags=["Floor Plan"])
 async def generate_floorplan(file: UploadFile = File(...)):
     image_bytes = await _read_and_validate_image(file)
     job_id = uuid.uuid4().hex
 
     try:
-        result = P.run_pipeline(image_bytes, job_id)
+        result = run_pipeline(image_bytes, job_id)
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))
     except Exception as e:
@@ -67,6 +63,7 @@ async def generate_floorplan(file: UploadFile = File(...)):
         "download_dxf": f"/download/{job_id}/dxf",
         "debug_layout_png": f"/download/{job_id}/layout-debug",
         "debug_openings_png": f"/download/{job_id}/openings-debug",
+        "debug_furniture_png": f"/download/{job_id}/furniture-debug",
     }
 
 
@@ -86,66 +83,6 @@ async def generate_floorplan_async(
     }
 
 
-@app.get("/jobs/{job_id}", tags=["Floor Plan"])
-def job_status(job_id: str):
-    job = _jobs.get(job_id)
-    if not job:
-        raise HTTPException(status_code=404, detail="Job not found")
-
-    response = {**job}
-    if job["status"] == "done":
-        response["download_png"] = f"/download/{job_id}/png"
-        response["download_dxf"] = f"/download/{job_id}/dxf"
-        response["debug_layout_png"] = f"/download/{job_id}/layout-debug"
-        response["debug_openings_png"] = f"/download/{job_id}/openings-debug"
-    return response
-
-
-@app.get("/download/{job_id}/png", tags=["Download"])
-def download_png(job_id: str):
-    path = _get_output_path(job_id, "png")
-    return FileResponse(
-        str(path),
-        media_type="image/png",
-        filename=f"floorplan_{job_id}.png",
-    )
-
-
-@app.get("/download/{job_id}/dxf", tags=["Download"])
-def download_dxf(job_id: str):
-    path = _get_output_path(job_id, "dxf")
-    return FileResponse(
-        str(path),
-        media_type="application/octet-stream",
-        filename=f"floorplan_{job_id}.dxf",
-    )
-
-
-@app.get("/download/{job_id}/layout-debug", tags=["Download"])
-def download_layout_debug(job_id: str):
-    path = _get_named_output(job_id, "layout_debug_png_path")
-    return FileResponse(
-        str(path),
-        media_type="image/png",
-        filename=f"layout_debug_{job_id}.png",
-    )
-
-
-@app.get("/download/{job_id}/openings-debug", tags=["Download"])
-def download_openings_debug(job_id: str):
-    path = _get_named_output(job_id, "openings_debug_png_path")
-    return FileResponse(
-        str(path),
-        media_type="image/png",
-        filename=f"openings_debug_{job_id}.png",
-    )
-
-
-@app.get("/jobs", tags=["System"])
-def list_jobs():
-    return [{"job_id": jid, "status": info.get("status")} for jid, info in _jobs.items()]
-
-
 async def _read_and_validate_image(file: UploadFile) -> bytes:
     if file.content_type not in ALLOWED_CONTENT_TYPES:
         raise HTTPException(status_code=415, detail="Upload a JPEG or PNG panorama.")
@@ -163,7 +100,7 @@ async def _read_and_validate_image(file: UploadFile) -> bytes:
 
 def _run_background(image_bytes: bytes, job_id: str):
     try:
-        result = P.run_pipeline(image_bytes, job_id)
+        result = run_pipeline(image_bytes, job_id)
         _jobs[job_id] = {"status": "done", **result}
     except Exception as e:
         log.exception("Background job %s failed", job_id)
