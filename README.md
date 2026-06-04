@@ -50,6 +50,8 @@ MagicPlan_2D_floor_plan/
 │       │   └── floorplan_renderer.py
 │       └── exporters/
 │           ├── __init__.py
+│           ├── dxf_exporter.py
+
 ```
 
 ### Main components
