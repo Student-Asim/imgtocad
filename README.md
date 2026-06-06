@@ -354,7 +354,9 @@ scipy>=1.11
 shapely>=2.0
 scikit-learn>=1.4
 ```
-
+## Outputs
+![Screenshot](https://github.com/Student-Asim/image_to_2d_plot/blob/main/api_endpoint/outputs/33e18552ad7148f2b17966e5ca85e164_openings_debug.png)
+![Screenshot]()
 ## Development notes
 
 - Keep imports consistent with the real folder structure.
