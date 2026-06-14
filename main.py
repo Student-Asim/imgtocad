@@ -8,7 +8,7 @@ from fastapi import BackgroundTasks, FastAPI, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from PIL import Image, UnidentifiedImageError
 
-from api_endpoint import config as C
+from api_endpoint import config_old as C
 from .runnable_floorplan.core.pipeline import load_models, run_pipeline
 
 
