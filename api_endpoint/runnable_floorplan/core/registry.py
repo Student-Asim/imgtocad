@@ -3,7 +3,7 @@ import logging
 import torch
 from ultralytics import YOLO
 
-from api_endpoint import config_old as C
+from api_endpoint import config as C
 from api_endpoint.model import HorizonNet
 
 log = logging.getLogger("pipeline")

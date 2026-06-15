@@ -1,5 +1,4 @@
 from .angles import pano_x_to_angle, circular_delta
-from .layout import build_floorplan_polygon
 from .raycast import find_hit_wall, ray_wall_intersect
 from .transforms import rot_points, rot_rect
 

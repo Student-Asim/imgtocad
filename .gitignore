@@ -1,12 +1,5 @@
 .env
-__pycache__/
+__pycache__
 *.pth
 *.pt
-hotel_floorplan
-MCP_SETUP.md
-QUICKSTART.md
-README.md
-start_api_server.bat
-start_api_server.sh
-start_api_server.ps1
 venv

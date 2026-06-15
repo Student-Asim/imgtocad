@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import torchvision.transforms as T
 
-from api_endpoint import config_old as C
+from api_endpoint import config as C
 
 
 def run_horizonnet(registry, img_pil):

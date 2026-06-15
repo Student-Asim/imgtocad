@@ -9,6 +9,8 @@ ENV_FILE = ROOT_DIR / ".env"
 load_dotenv(dotenv_path=ENV_FILE, override=True)
 
 
+HORIZONNET_WEIGHTS = ROOT_DIR / "runnable_floorplan" / "models" / "model.pth"
+
 def _get_path(name: str, default: str | Path) -> Path:
     raw = Path(os.getenv(name, str(default))).expanduser()
     if raw.is_absolute():

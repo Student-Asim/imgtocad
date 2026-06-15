@@ -5,7 +5,6 @@ from typing import Any, Literal
 import numpy as np
 from shapely.geometry import Polygon
 
-
 WallName = Literal["front", "right", "back", "left"]
 
 
@@ -99,6 +98,9 @@ class PipelineArtifacts:
     floorplan_png: Path
     floorplan_dxf: Path
     debug_dir: Path
+    layout_debug_png: Path | None = None
+    openings_debug_png: Path | None = None
+    furniture_debug_png: Path | None = None
 
 
 @dataclass
@@ -122,4 +124,7 @@ class PipelineResult:
             "png_path": str(self.artifacts.floorplan_png),
             "dxf_path": str(self.artifacts.floorplan_dxf),
             "debug_dir": str(self.artifacts.debug_dir),
+            "layout_debug_png_path": str(self.artifacts.layout_debug_png) if self.artifacts.layout_debug_png else None,
+            "openings_debug_png_path": str(self.artifacts.openings_debug_png) if self.artifacts.openings_debug_png else None,
+            "furniture_debug_png_path": str(self.artifacts.furniture_debug_png) if self.artifacts.furniture_debug_png else None,
         }

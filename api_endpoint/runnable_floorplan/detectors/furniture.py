@@ -1,6 +1,6 @@
 import numpy as np
 
-from api_endpoint import config_old as C
+from api_endpoint import config as C
 from ..types_old import RawDetection
 
 
