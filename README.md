@@ -103,36 +103,59 @@ Uploads four wall images and returns result metadata with output file paths.
 - `GET /download/{job_id}/openings-debug`
 - `GET /download/{job_id}/furniture-debug`
 
-## Installation
+## Getting Started
 
-Create and activate a virtual environment, then install dependencies.
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Student-Asim/imgtocad.git
+cd imgtocad
+```
+
+### 2. Create a virtual environment
 
 ```bash
 python -m venv venv
 ```
 
-### Windows PowerShell
+### 3. Activate the virtual environment
+
+#### Windows PowerShell
 
 ```powershell
 venv\Scripts\Activate.ps1
 ```
 
-### Install packages
+#### Windows CMD
+
+```cmd
+venv\Scripts\activate.bat
+```
+
+#### Linux / macOS
 
 ```bash
+source venv/bin/activate
+```
+
+### 4. Install dependencies
+
+```bash
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-## Run the app
+### 5. Run the API
 
 ```bash
 uvicorn api_endpoint.main:app --reload
 ```
 
-Then open:
+### 6. Open Swagger docs
 
-- Swagger UI: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+Open this in your browser:
 
+[http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 ## Configuration
 
 The project reads settings from `config.py` and optional `.env` values.
