@@ -172,13 +172,5 @@ This usually means one of these:
 3. Clean `__pycache__` folders.
 4. Restart the server.
 
-### Remove Python cache on Windows PowerShell
-
-```powershell
-Get-ChildItem -Recurse -Directory -Filter __pycache__ | Remove-Item -Recurse -Force
-Get-ChildItem -Recurse -Filter *.pyc | Remove-Item -Force
-```
-
-## Current Goal
-
-This codebase is now intended to be a **four-wall-only** floor plan generator. Panorama upload logic should be removed from the API and pipeline if it is no longer needed.
+## Licence
+......
